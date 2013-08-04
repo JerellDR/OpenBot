@@ -124,6 +124,6 @@ class oBot:
 
 
 if __name__ == "__main__":
-    bot = oBot('botTester')
+    bot = oBot('OpenBot')
     signal.signal(signal.SIGINT, bot.signal_handler)
     bot.run()
