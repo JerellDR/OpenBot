@@ -3,7 +3,7 @@ import sys
 import urllib
 import csv
 import signal
-from time import gmtime, strftime, sleep
+from time import time, gmtime, strftime, sleep
 
 import praw
 
@@ -32,7 +32,7 @@ class oBot:
                 for submission in subredGet(limit=self.gLimit):
                     if submission.domain != 'self.opentest' and submission.id not in self.done:
                         url = submission.url.replace('.nyud.net', '')
-                        self.done[submission.id] = strftime('%I:%M:%S', gmtime())
+                        self.done[submission.id] = strftime('%H:%M:%S', gmtime())
                         workingLink = False
                         try:
                             request = urllib.request.Request(url)
@@ -40,12 +40,14 @@ class oBot:
                             response = opener.open(request)
 
                         except urllib.error.HTTPError as e:
-                            timemessage = strftime('%H:%M:%S:p', gmtime())
-                            message = "This URL failed to open at " + timemessage + " with the following HTTP Status code: {0}".format(
+                            t = time.localtime()
+                            timemessage = time.asctime(t)
+                            message = "This URL failed to open on " + timemessage + " with the following HTTP Status code: {0}".format(
                                 e.code)
                         except urllib.error.URLError as e:
-                            timemessage = strftime('%H:%M:%S:p', gmtime())
-                            message = "This URL failed to open at " + timemessage + " with the following error: {0}".format(
+                            t = time.localtime()
+                            timemessage = time.asctime(t)
+                            message = "This URL failed to open on " + timemessage + " with the following error: {0}".format(
                                 e.args)
                         else:
                             workingLink = True
@@ -79,16 +81,17 @@ class oBot:
                                         #print submission.title
                                         #print submission.permalink
 
-            sleep(60)
+            sleep(30)
+            print(time.asctime())
             self.running = False
 
     def importLog(self):
         try:
-            file = open('lastscan.csv', 'rb')
+            file = open('lastscan.csv', 'rt', encoding="utf8")
         except:
             open('lastscan.csv', "w").close()
         finally:
-            file = open('lastscan.csv', 'rb')
+            file = open('lastscan.csv', 'rt', encoding='utf8')
             reader = csv.reader(file, delimiter=',')
             reader = list(reader)
             for row in reader:
