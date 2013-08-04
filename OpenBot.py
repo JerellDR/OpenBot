@@ -2,10 +2,10 @@
 import sys
 import urllib
 import csv
+import praw
 import signal
 from time import gmtime, strftime, sleep
 
-import praw
 
 
 class oBot:
@@ -23,7 +23,7 @@ class oBot:
 
 
     def run(self):
-        self.r = praw.Reddit(user_agent='opendirectoriesbot/1.0 by /u/Mrgadgetz')
+        self.r = praw.Reddit(user_agent='opendirectoriesbot/1.0 by by opendirectories collective')
         self.r.login(self.username, self.password)
         self.subreddit = self.r.get_subreddit('openTest')
         while self.running:
@@ -96,7 +96,7 @@ class oBot:
             file.close()
 
     def createLog(self):
-        file = open('lastscan.csv', 'wb')
+        file = open('lastscan.csv', 'w')
         writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         for id, time in self.done.items():
             writer.writerow([id, time])
