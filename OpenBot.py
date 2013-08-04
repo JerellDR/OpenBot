@@ -2,10 +2,10 @@
 import sys
 import urllib
 import csv
-import praw
 import signal
 from time import gmtime, strftime, sleep
 
+import praw
 
 
 class oBot:
@@ -23,14 +23,14 @@ class oBot:
 
 
     def run(self):
-        self.r = praw.Reddit(user_agent='opendirectoriesbot/1.0 by by opendirectories collective')
+        self.r = praw.Reddit(user_agent='OpenBot/1.0 Search /r/opendirectories for dead links')
         self.r.login(self.username, self.password)
-        self.subreddit = self.r.get_subreddit('openTest')
+        self.subreddit = self.r.get_subreddit('opentest')
         while self.running:
             for att in self.getsAttr:
                 subredGet = getattr(self.subreddit, att)
                 for submission in subredGet(limit=self.gLimit):
-                    if submission.domain != 'self.openTest' and submission.id not in self.done:
+                    if submission.domain != 'self.opentest' and submission.id not in self.done:
                         url = submission.url.replace('.nyud.net', '')
                         self.done[submission.id] = strftime('%I:%M:%S', gmtime())
                         workingLink = False
